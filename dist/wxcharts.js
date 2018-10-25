@@ -849,6 +849,7 @@ function drawRadarLabel(angleList, radius, centerPosition, opts, config, context
 
 function drawPieText(series, opts, config, context, radius, center) {
     var lineRadius = radius + config.pieChartLinePadding;
+    var textRadius = lineRadius + config.pieChartTextPadding;
     var textObjectCollection = [];
     var lastTextObject = null;
 
@@ -1057,6 +1058,8 @@ function drawColumnDataPoints(series, opts, config, context) {
 
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
+    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+
     context.save();
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
         context.translate(opts._scrollDistance_, 0);
@@ -1320,15 +1323,19 @@ function drawXAxis(categories, opts, config, context) {
     context.stroke();
 
     // 对X轴列表做抽稀处理
+    var xAxisSpacing = opts.xAxis.spacing || 1.5;
     var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
-    var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
+    var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / xAxisSpacing));
     var ratio = Math.ceil(categories.length / maxXAxisListLength);
 
     categories = categories.map(function (item, index) {
         return index % ratio !== 0 ? '' : item;
     });
 
-    if (config._xAxisTextAngle_ === 0) {
+    // 角度添加进配置
+    var xAxisTextAngle = opts.xAxis.textAngle !== undefined ? opts.xAxis.textAngle : config._xAxisTextAngle_;
+
+    if (xAxisTextAngle === 0) {
         context.beginPath();
         context.setFontSize(config.fontSize);
         context.setFillStyle(opts.xAxis.fontColor || '#666666');
@@ -1351,7 +1358,7 @@ function drawXAxis(categories, opts, config, context) {
                 transX = _calRotateTranslate.transX,
                 transY = _calRotateTranslate.transY;
 
-            context.rotate(-1 * config._xAxisTextAngle_);
+            context.rotate(-1 * xAxisTextAngle);
             context.translate(transX, transY);
             context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
             context.closePath();
@@ -1401,6 +1408,7 @@ function drawYAxis(series, opts, config, context) {
     var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
     var startX = config.padding + yAxisTotalWidth;
     var endX = opts.width - config.padding;
+    var startY = config.padding;
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
 
     // set YAxis background
@@ -1441,7 +1449,8 @@ function drawLegend(series, opts, config, context) {
     // legend margin top `config.padding`
 
     var _calLegendData = calLegendData(series, opts, config),
-        legendList = _calLegendData.legendList;
+        legendList = _calLegendData.legendList,
+        legendHeight = _calLegendData.legendHeight;
 
     var padding = 5;
     var marginTop = 8;
@@ -1925,7 +1934,7 @@ var Charts = function Charts(opts) {
 
     this.opts = opts;
     this.config = config$$1;
-    this.context = wx.createCanvasContext(opts.canvasId);
+    this.context = wx.createCanvasContext(opts.canvasId, opts.componentInstance);
     // store calcuated chart data
     // such as chart point coordinate
     this.chartData = {};

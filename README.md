@@ -17,6 +17,9 @@
 
 # 更新记录 
 
+- [x] 添加 x 轴配置（倾斜角度`opts.xAxis.textAngle`、抽稀程度`opts.xAxis.spacing`）
+- [x] 修复自定义组件中看不见的问题
+
 - [ ] 动画性能优化
 - [x] 图表滚动的支持，感谢[@jxintang](https://github.com/jxintang)
 - [x] [优化曲线绘制](https://github.com/xiaolin3303/wx-charts/issues/79)

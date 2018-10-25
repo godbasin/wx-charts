@@ -273,15 +273,19 @@ export function drawXAxis (categories, opts, config, context) {
     context.stroke();
 
     // 对X轴列表做抽稀处理
+    const xAxisSpacing = opts.xAxis.spacing || 1.5;
     let validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
-    let maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
+    let maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / xAxisSpacing));
     let ratio = Math.ceil(categories.length / maxXAxisListLength);
 
     categories = categories.map((item, index) => {
         return index % ratio !== 0 ? '' : item;
     });
 
-    if (config._xAxisTextAngle_ === 0) {
+    // 角度添加进配置
+    const xAxisTextAngle = opts.xAxis.textAngle !== undefined ? opts.xAxis.textAngle : config._xAxisTextAngle_;
+
+    if (xAxisTextAngle === 0) {
         context.beginPath();
         context.setFontSize(config.fontSize);
         context.setFillStyle(opts.xAxis.fontColor || '#666666');
@@ -300,7 +304,7 @@ export function drawXAxis (categories, opts, config, context) {
             let textWidth = measureText(item);
             let offset = eachSpacing / 2 - textWidth;
             let { transX, transY }  = calRotateTranslate(xAxisPoints[index] + eachSpacing / 2, startY + config.fontSize / 2 + 5, opts.height);
-            context.rotate(-1 * config._xAxisTextAngle_);
+            context.rotate(-1 * xAxisTextAngle);
             context.translate(transX, transY);
             context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
             context.closePath();
