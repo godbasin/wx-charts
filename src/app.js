@@ -20,7 +20,7 @@ let Charts = function(opts) {
 
     this.opts = opts;
     this.config = config;
-    this.context = wx.createCanvasContext(opts.canvasId);
+    this.context = wx.createCanvasContext(opts.canvasId, opts.componentInstance);
     // store calcuated chart data
     // such as chart point coordinate
     this.chartData = {};
