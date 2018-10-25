@@ -346,6 +346,7 @@ export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing
 }
 
 export function getYAxisTextList(series, opts, config) {
+    const yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     let data = dataCombine(series);
     // remove null from data
     data = data.filter((item) => {
@@ -372,9 +373,9 @@ export function getYAxisTextList(series, opts, config) {
     let maxRange = dataRange.maxRange;
 
     let range = [];
-    let eachRange = (maxRange - minRange) / config.yAxisSplit;
+    let eachRange = (maxRange - minRange) / yAxisSplit;
 
-    for (var i = 0; i <= config.yAxisSplit; i++) {
+    for (var i = 0; i <= yAxisSplit; i++) {
         range.push(minRange + eachRange * i);
     }
     return range.reverse();

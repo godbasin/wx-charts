@@ -669,6 +669,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
 }
 
 function getYAxisTextList(series, opts, config) {
+    var yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     var data = dataCombine(series);
     // remove null from data
     data = data.filter(function (item) {
@@ -695,9 +696,9 @@ function getYAxisTextList(series, opts, config) {
     var maxRange = dataRange.maxRange;
 
     var range = [];
-    var eachRange = (maxRange - minRange) / config.yAxisSplit;
+    var eachRange = (maxRange - minRange) / yAxisSplit;
 
-    for (var i = 0; i <= config.yAxisSplit; i++) {
+    for (var i = 0; i <= yAxisSplit; i++) {
         range.push(minRange + eachRange * i);
     }
     return range.reverse();
@@ -1371,17 +1372,21 @@ function drawXAxis(categories, opts, config, context) {
 }
 
 function drawYAxisGrid(opts, config, context) {
+    if (opts.yAxis.disableGrid === true) {
+        return;
+    }
+    var yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
-    var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    var eachSpacing = Math.floor(spacingValid / yAxisSplit);
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
     var startX = config.padding + yAxisTotalWidth;
     var endX = opts.width - config.padding;
 
     var points = [];
-    for (var i = 0; i < config.yAxisSplit; i++) {
+    for (var i = 0; i < yAxisSplit; i++) {
         points.push(config.padding + eachSpacing * i);
     }
-    points.push(config.padding + eachSpacing * config.yAxisSplit + 2);
+    points.push(config.padding + eachSpacing * yAxisSplit + 2);
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
@@ -1398,6 +1403,7 @@ function drawYAxis(series, opts, config, context) {
     if (opts.yAxis.disabled === true) {
         return;
     }
+    var yAxisSplit = opts.yAxis.split || config.yAxisSplit;
 
     var _calYAxisData4 = calYAxisData(series, opts, config),
         rangesFormat = _calYAxisData4.rangesFormat;
@@ -1405,7 +1411,7 @@ function drawYAxis(series, opts, config, context) {
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
 
     var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
-    var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    var eachSpacing = Math.floor(spacingValid / yAxisSplit);
     var startX = config.padding + yAxisTotalWidth;
     var endX = opts.width - config.padding;
     var startY = config.padding;
@@ -1419,7 +1425,7 @@ function drawYAxis(series, opts, config, context) {
     context.fillRect(endX, 0, opts.width, endY + config.xAxisHeight + 5);
 
     var points = [];
-    for (var i = 0; i <= config.yAxisSplit; i++) {
+    for (var i = 0; i <= yAxisSplit; i++) {
         points.push(config.padding + eachSpacing * i);
     }
 

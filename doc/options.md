@@ -116,3 +116,7 @@
 `opts.xAxis.textAngle` Number x轴文字倾斜角度
 
 `opts.xAxis.spacing` Number x轴文字稀疏程度（默认为1，越大越稀）
+
+`opts.yAxis.split` Number y轴坐标与网格数量（默认为5）
+
+`opts.yAxis.disableGrid` Boolean 关闭y轴网格线

@@ -317,17 +317,21 @@ export function drawXAxis (categories, opts, config, context) {
 }
 
 export function drawYAxisGrid (opts, config, context) {
+    if (opts.yAxis.disableGrid === true) {
+        return;
+    }
+    const yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     let spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;    
-    let eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    let eachSpacing = Math.floor(spacingValid / yAxisSplit);
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;    
     let startX = config.padding + yAxisTotalWidth;
     let endX = opts.width - config.padding;
 
     let points = [];
-    for (let i = 0; i < config.yAxisSplit; i++) {
+    for (let i = 0; i < yAxisSplit; i++) {
         points.push(config.padding + eachSpacing * i);
     }
-    points.push(config.padding + eachSpacing * config.yAxisSplit + 2);
+    points.push(config.padding + eachSpacing * yAxisSplit + 2);
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc")
@@ -344,11 +348,12 @@ export function drawYAxis (series, opts, config, context) {
     if (opts.yAxis.disabled === true) {
         return;
     }
+    const yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     let { rangesFormat } = calYAxisData(series, opts, config);
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
 
     let spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
-    let eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    let eachSpacing = Math.floor(spacingValid / yAxisSplit);
     let startX = config.padding + yAxisTotalWidth;
     let endX = opts.width - config.padding;
     let startY = config.padding;
@@ -362,7 +367,7 @@ export function drawYAxis (series, opts, config, context) {
     context.fillRect(endX, 0, opts.width, endY + config.xAxisHeight + 5);
 
     let points = [];
-    for (let i = 0; i <= config.yAxisSplit; i++) {
+    for (let i = 0; i <= yAxisSplit; i++) {
         points.push(config.padding + eachSpacing * i);
     }
 
