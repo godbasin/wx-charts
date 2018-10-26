@@ -1114,6 +1114,7 @@ function drawAreaDataPoints(series, opts, config, context) {
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
     var calPoints = [];
+    var lineWidth = opts.lineWidth || 2;
 
     context.save();
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
@@ -1137,7 +1138,7 @@ function drawAreaDataPoints(series, opts, config, context) {
             context.setStrokeStyle(eachSeries.color);
             context.setFillStyle(eachSeries.color);
             context.setGlobalAlpha(0.6);
-            context.setLineWidth(2);
+            context.setLineWidth(lineWidth);
             if (points.length > 1) {
                 var firstPoint = points[0];
                 var lastPoint = points[points.length - 1];
@@ -1199,6 +1200,8 @@ function drawAreaDataPoints(series, opts, config, context) {
 function drawLineDataPoints(series, opts, config, context) {
     var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
 
+    var lineWidth = opts.lineWidth || 2;
+
     var _calYAxisData3 = calYAxisData(series, opts, config),
         ranges = _calYAxisData3.ranges;
 
@@ -1228,7 +1231,7 @@ function drawLineDataPoints(series, opts, config, context) {
         splitPointList.forEach(function (points, index) {
             context.beginPath();
             context.setStrokeStyle(eachSeries.color);
-            context.setLineWidth(2);
+            context.setLineWidth(lineWidth);
             if (points.length === 1) {
                 context.moveTo(points[0].x, points[0].y);
                 context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
@@ -1376,6 +1379,7 @@ function drawYAxisGrid(opts, config, context) {
         return;
     }
     var yAxisSplit = opts.yAxis.split || config.yAxisSplit;
+    var gridLineWidth = opts.yAxis.gridLineWidth || 1;
     var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
     var eachSpacing = Math.floor(spacingValid / yAxisSplit);
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
@@ -1390,7 +1394,7 @@ function drawYAxisGrid(opts, config, context) {
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
-    context.setLineWidth(1);
+    context.setLineWidth(gridLineWidth);
     points.forEach(function (item, index) {
         context.moveTo(startX, item);
         context.lineTo(endX, item);
@@ -1461,6 +1465,7 @@ function drawLegend(series, opts, config, context) {
     var padding = 5;
     var marginTop = 8;
     var shapeWidth = 15;
+    var lineWidth = opts.legend.lineWidth || 1;
     legendList.forEach(function (itemList, listIndex) {
         var width = 0;
         itemList.forEach(function (item) {
@@ -1475,14 +1480,14 @@ function drawLegend(series, opts, config, context) {
             switch (opts.type) {
                 case 'line':
                     context.beginPath();
-                    context.setLineWidth(1);
+                    context.setLineWidth(lineWidth);
                     context.setStrokeStyle(item.color);
                     context.moveTo(startX - 2, startY + 5);
                     context.lineTo(startX + 17, startY + 5);
                     context.stroke();
                     context.closePath();
                     context.beginPath();
-                    context.setLineWidth(1);
+                    context.setLineWidth(lineWidth);
                     context.setStrokeStyle('#ffffff');
                     context.setFillStyle(item.color);
                     context.moveTo(startX + 7.5, startY + 5);
@@ -1528,6 +1533,7 @@ function drawPieDataPoints(series, opts, config, context) {
         y: (opts.height - config.legendHeight) / 2
     };
     var radius = Math.min(centerPosition.x - config.pieChartLinePadding - config.pieChartTextPadding - config._pieTextMaxLength_, centerPosition.y - config.pieChartLinePadding - config.pieChartTextPadding);
+    var lineWidth = opts.lineWidth || 1;
     if (opts.dataLabel) {
         radius -= 10;
     } else {
@@ -1539,7 +1545,7 @@ function drawPieDataPoints(series, opts, config, context) {
     });
     series.forEach(function (eachSeries) {
         context.beginPath();
-        context.setLineWidth(2);
+        context.setLineWidth(lineWidth);
         context.setStrokeStyle('#ffffff');
         context.setFillStyle(eachSeries.color);
         context.moveTo(centerPosition.x, centerPosition.y);
@@ -1601,12 +1607,13 @@ function drawRadarDataPoints(series, opts, config, context) {
     };
 
     var radius = Math.min(centerPosition.x - (getMaxTextListLength(opts.categories) + config.radarLabelTextMargin), centerPosition.y - config.radarLabelTextMargin);
+    var lineWidth = opts.lineWidth || 1;
 
     radius -= config.padding;
 
     // draw grid
     context.beginPath();
-    context.setLineWidth(1);
+    context.setLineWidth(lineWidth);
     context.setStrokeStyle(radarOption.gridColor || "#cccccc");
     coordinateAngle.forEach(function (angle) {
         var pos = convertCoordinateOrigin(radius * Math.cos(angle), radius * Math.sin(angle), centerPosition);
@@ -1621,7 +1628,7 @@ function drawRadarDataPoints(series, opts, config, context) {
     var _loop = function _loop(i) {
         var startPos = {};
         context.beginPath();
-        context.setLineWidth(1);
+        context.setLineWidth(lineWidth);
         context.setStrokeStyle(radarOption.gridColor || "#cccccc");
         coordinateAngle.forEach(function (angle, index) {
             var pos = convertCoordinateOrigin(radius / config.radarGridCount * i * Math.cos(angle), radius / config.radarGridCount * i * Math.sin(angle), centerPosition);

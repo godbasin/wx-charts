@@ -120,3 +120,9 @@
 `opts.yAxis.split` Number y轴坐标与网格数量（默认为5）
 
 `opts.yAxis.disableGrid` Boolean 关闭y轴网格线
+
+`opts.yAxis.gridLineWidth` Number y轴网格的粗细，单位px
+
+`opts.lineWidth` Number 图线的粗细，单位px
+
+`opts.legend.lineWidth` Number 图例粗细，单位px

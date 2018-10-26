@@ -73,6 +73,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
     let maxRange = ranges.shift();
     let endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
     let calPoints = [];
+    const lineWidth = opts.lineWidth || 2;
 
     context.save();
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {    
@@ -97,7 +98,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
             context.setStrokeStyle(eachSeries.color);
             context.setFillStyle(eachSeries.color);
             context.setGlobalAlpha(0.6);
-            context.setLineWidth(2);
+            context.setLineWidth(lineWidth);
             if (points.length > 1) {
                 let firstPoint = points[0];
                 let lastPoint = points[points.length - 1];
@@ -157,6 +158,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
 }
 
 export function drawLineDataPoints (series, opts, config, context, process = 1) {
+    const lineWidth = opts.lineWidth || 2;
     let { ranges } = calYAxisData(series, opts, config);
     let { xAxisPoints, eachSpacing } = getXAxisPoints(opts.categories, opts, config);
     let minRange = ranges.pop();
@@ -182,7 +184,7 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
         splitPointList.forEach((points, index) => {
             context.beginPath();
             context.setStrokeStyle(eachSeries.color);
-            context.setLineWidth(2);
+            context.setLineWidth(lineWidth);
             if (points.length === 1) {
                 context.moveTo(points[0].x, points[0].y);
                 context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
@@ -321,6 +323,7 @@ export function drawYAxisGrid (opts, config, context) {
         return;
     }
     const yAxisSplit = opts.yAxis.split || config.yAxisSplit;
+    const gridLineWidth = opts.yAxis.gridLineWidth || 1;
     let spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;    
     let eachSpacing = Math.floor(spacingValid / yAxisSplit);
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;    
@@ -335,7 +338,7 @@ export function drawYAxisGrid (opts, config, context) {
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc")
-    context.setLineWidth(1);
+    context.setLineWidth(gridLineWidth);
     points.forEach(function(item, index) {
         context.moveTo(startX, item);
         context.lineTo(endX, item);
@@ -399,6 +402,7 @@ export function drawLegend (series, opts, config, context) {
     let padding = 5;
     let marginTop = 8;
     let shapeWidth = 15;
+    const lineWidth = opts.legend.lineWidth || 1;
     legendList.forEach((itemList, listIndex) => {
         let width = 0;
         itemList.forEach(function (item) {
@@ -413,14 +417,14 @@ export function drawLegend (series, opts, config, context) {
             switch (opts.type) {
                 case 'line':
                     context.beginPath();
-                    context.setLineWidth(1);
+                    context.setLineWidth(lineWidth);
                     context.setStrokeStyle(item.color);
                     context.moveTo(startX - 2, startY + 5);
                     context.lineTo(startX + 17, startY + 5);
                     context.stroke();
                     context.closePath();
                     context.beginPath();
-                    context.setLineWidth(1);
+                    context.setLineWidth(lineWidth);
                     context.setStrokeStyle('#ffffff');
                     context.setFillStyle(item.color);
                     context.moveTo(startX + 7.5, startY + 5);
@@ -467,6 +471,7 @@ export function drawPieDataPoints (series, opts, config, context, process = 1) {
         centerPosition.x - config.pieChartLinePadding - config.pieChartTextPadding - config._pieTextMaxLength_,
         centerPosition.y - config.pieChartLinePadding - config.pieChartTextPadding
     );
+    const lineWidth = opts.lineWidth || 1;
     if (opts.dataLabel) {
         radius -= 10;
     } else {
@@ -478,7 +483,7 @@ export function drawPieDataPoints (series, opts, config, context, process = 1) {
     });
     series.forEach(function(eachSeries) {
         context.beginPath();
-        context.setLineWidth(2);
+        context.setLineWidth(lineWidth);
         context.setStrokeStyle('#ffffff');
         context.setFillStyle(eachSeries.color);
         context.moveTo(centerPosition.x, centerPosition.y);
@@ -541,12 +546,13 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
         centerPosition.x - (getMaxTextListLength(opts.categories) + config.radarLabelTextMargin),
         centerPosition.y - config.radarLabelTextMargin
     );
+    const lineWidth = opts.lineWidth || 1;
 
     radius -= config.padding;
 
     // draw grid
     context.beginPath();
-    context.setLineWidth(1);
+    context.setLineWidth(lineWidth);
     context.setStrokeStyle(radarOption.gridColor || "#cccccc");
     coordinateAngle.forEach(angle => {
         let pos = convertCoordinateOrigin(radius * Math.cos(angle), radius * Math.sin(angle), centerPosition);
@@ -560,7 +566,7 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
     for (let i = 1; i <= config.radarGridCount; i++) {
         let startPos = {};
         context.beginPath();
-        context.setLineWidth(1);
+        context.setLineWidth(lineWidth);
         context.setStrokeStyle(radarOption.gridColor || "#cccccc");
         coordinateAngle.forEach((angle, index) => {
             let pos = convertCoordinateOrigin(radius / config.radarGridCount * i * Math.cos(angle), radius / config.radarGridCount * i * Math.sin(angle), centerPosition);
