@@ -140,6 +140,24 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
             let shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
         }
+        if (opts.specialPoint && opts.specialPoint.enabled) {          
+            // 抓取特殊标记点的index，推进队列
+            const specialActivePoints = [];
+            const specialNormalPoints = [];
+            opts.categories.forEach((x, index) => {
+                if((opts.specialPoint.data || []).indexOf(x) > -1){
+                    if((opts.specialPoint.activeData || []).indexOf(x) > -1){
+                        specialActivePoints.push(points[index]);
+                    }else{
+                        specialNormalPoints.push(points[index]);
+                    }
+                }
+            });
+            const activeColor = opts.specialPoint.activeColor || eachSeries.color;
+            const color = opts.specialPoint.color || eachSeries.color;
+            drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
+            drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
+        }
     });
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function(eachSeries, seriesIndex) {
@@ -215,6 +233,24 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
             const optShape = config.dataPointShape.find(x => x === opts.dataPointShape);
             let shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
+        }
+        if (opts.specialPoint && opts.specialPoint.enabled) {          
+            // 抓取特殊标记点的index，推进队列
+            const specialActivePoints = [];
+            const specialNormalPoints = [];
+            opts.categories.forEach((x, index) => {
+                if((opts.specialPoint.data || []).indexOf(x) > -1){
+                    if((opts.specialPoint.activeData || []).indexOf(x) > -1){
+                        specialActivePoints.push(points[index]);
+                    }else{
+                        specialNormalPoints.push(points[index]);
+                    }
+                }
+            });
+            const activeColor = opts.specialPoint.activeColor || eachSeries.color;
+            const color = opts.specialPoint.color || eachSeries.color;
+            drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
+            drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
         }
     });
     if (opts.dataLabel !== false && process === 1) {
@@ -608,6 +644,24 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
                 return item.position;
             });
             drawPointShape(points, eachSeries.color, shape, context);
+        }
+        if (opts.specialPoint && opts.specialPoint.enabled) {          
+            // 抓取特殊标记点的index，推进队列
+            const specialActivePoints = [];
+            const specialNormalPoints = [];
+            opts.categories.forEach((x, index) => {
+                if((opts.specialPoint.data || []).indexOf(x) > -1){
+                    if((opts.specialPoint.activeData || []).indexOf(x) > -1){
+                        specialActivePoints.push(points[index]);
+                    }else{
+                        specialNormalPoints.push(points[index]);
+                    }
+                }
+            });
+            const activeColor = opts.specialPoint.activeColor || eachSeries.color;
+            const color = opts.specialPoint.color || eachSeries.color;
+            drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
+            drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
         }
     });
     // draw label text

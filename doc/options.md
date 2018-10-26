@@ -126,3 +126,15 @@
 `opts.lineWidth` Number 图线的粗细，单位px
 
 `opts.legend.lineWidth` Number 图例粗细，单位px
+
+`opts.specialPoint` Object 特殊点标注
+
+`opts.specialPoint.enabled` Boolean 特殊点标注开启（默认false）
+
+`opts.specialPoint.data` Array 特殊点标记数据，传入与 `opts.categories` 数据匹配则会被标记
+
+`opts.specialPoint.activeData` Array 特殊点标记数据高亮，传入与 `opts.categories` 数据匹配则会被标亮
+
+`opts.specialPoint.color` String 特殊点标记数据颜色
+
+`opts.specialPoint.activeColor` String 特殊点标记数据高亮颜色

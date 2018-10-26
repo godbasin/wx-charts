@@ -37,6 +37,24 @@ export default function drawPointShape (points, color, shape, context) {
                 context.lineTo(item.x, item.y - 4.5);
             }
         });
+    } else if (shape === 'strokeCircle') {
+        points.forEach(function(item, index) {
+            if (item !== null) {
+                context.moveTo(item.x + 3.5, item.y)
+                context.arc(item.x, item.y, 3, 0, 2 * Math.PI, false)
+                context.setStrokeStyle(color);
+                context.setFillStyle('#ffffff');
+            }
+        });
+    } else if (shape === 'fillCircle') {
+        points.forEach(function(item, index) {
+            if (item !== null) {
+                context.moveTo(item.x + 3.5, item.y)
+                context.arc(item.x, item.y, 3, 0, 2 * Math.PI, false)
+                context.setStrokeStyle(color);
+                context.setFillStyle(color);
+            }
+        });
     }
     context.closePath();
     context.fill();
