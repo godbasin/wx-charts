@@ -17,7 +17,7 @@
 
 # 更新记录 
 
-- [x] 添加图表配置（折线粗细`opts.lineWidth`）
+- [x] 添加图表配置（折线粗细`opts.lineWidth`、数据点`opts.dataPointShape`支持配置`'diamond', 'circle', 'triangle', 'rect'`）
 - [x] 添加 y 轴配置（抽稀程度`opts.yAxis.split`、网格粗细程度`opts.yAxis.gridLineWidth`、关闭 y 轴网格线`opts.yAxis.disableGrid`）
 - [x] 添加 x 轴配置（倾斜角度`opts.xAxis.textAngle`、抽稀程度`opts.xAxis.spacing`）
 - [x] 修复自定义组件中看不见的问题

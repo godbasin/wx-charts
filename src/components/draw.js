@@ -136,7 +136,8 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
         });
 
         if (opts.dataPointShape !== false) {          
-            let shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            const optShape = config.dataPointShape.find(x => x === opts.dataPointShape);
+            let shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
         }
     });
@@ -211,7 +212,8 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
         });
 
         if (opts.dataPointShape !== false) {        
-            let shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            const optShape = config.dataPointShape.find(x => x === opts.dataPointShape);
+            let shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
         }
     });
@@ -600,7 +602,8 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
         context.setGlobalAlpha(1);
 
         if (opts.dataPointShape !== false) {        
-            let shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            const optShape = config.dataPointShape.find(x => x === opts.dataPointShape);
+            let shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             let points = eachSeries.data.map(item => {
                 return item.position;
             });

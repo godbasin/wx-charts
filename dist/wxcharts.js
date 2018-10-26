@@ -1176,7 +1176,10 @@ function drawAreaDataPoints(series, opts, config, context) {
         });
 
         if (opts.dataPointShape !== false) {
-            var shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            var optShape = config.dataPointShape.find(function (x) {
+                return x === opts.dataPointShape;
+            });
+            var shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
         }
     });
@@ -1258,7 +1261,10 @@ function drawLineDataPoints(series, opts, config, context) {
         });
 
         if (opts.dataPointShape !== false) {
-            var shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            var optShape = config.dataPointShape.find(function (x) {
+                return x === opts.dataPointShape;
+            });
+            var shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             drawPointShape(points, eachSeries.color, shape, context);
         }
     });
@@ -1666,7 +1672,10 @@ function drawRadarDataPoints(series, opts, config, context) {
         context.setGlobalAlpha(1);
 
         if (opts.dataPointShape !== false) {
-            var shape = config.dataPointShape[seriesIndex % config.dataPointShape.length];
+            var optShape = config.dataPointShape.find(function (x) {
+                return x === opts.dataPointShape;
+            });
+            var shape = optShape || config.dataPointShape[seriesIndex % config.dataPointShape.length];
             var points = eachSeries.data.map(function (item) {
                 return item.position;
             });

@@ -41,7 +41,7 @@
 
 `opts.dataLabel` Boolean default true 是否在图表中显示数据内容值
 
-`opts.dataPointShape` Boolean default true 是否在图表中显示数据点图形标识
+`opts.dataPointShape` Boolean default true 是否在图表中显示数据点图形标识，可选值为diamond, circle, triangle, rect
 
 `opts.disablePieStroke` Boolean default false 不绘制饼图（圆环图）各区块的白色分割线
 
