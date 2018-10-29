@@ -2047,6 +2047,7 @@ Charts.prototype.updateData = function () {
 
     this.opts.series = data.series || this.opts.series;
     this.opts.categories = data.categories || this.opts.categories;
+    this.opts.specialPoint = data.specialPoint || this.opts.specialPoint;
 
     this.opts.title = assign({}, this.opts.title, data.title || {});
     this.opts.subtitle = assign({}, this.opts.subtitle, data.subtitle || {});
