@@ -2,6 +2,7 @@ import { getRadarDataPoints, getRadarCoordinateSeries, getMaxTextListLength, spl
 import { convertCoordinateOrigin, measureText, calRotateTranslate, createCurveControlPoints } from './charts-util'
 import Util from '../util/util'
 import drawPointShape from './draw-data-shape'
+import drawTextPoint from './draw-text-point'
 import { drawPointText, drawPieText, drawRingTitle, drawRadarLabel } from './draw-data-text'
 import { drawToolTip, drawToolTipSplitLine } from './draw-tooltip'
 import { assign } from '../util/polyfill/index';
@@ -158,6 +159,21 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
         }
+        if (opts.textPoint && opts.textPoint.enabled) {          
+            // 抓取文字标记点的index，推进队列
+            const textPoints = [];
+            opts.categories.forEach((x, index) => {
+                const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
+                if(theData){
+                    const point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            const backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            const textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
+        }
     });
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function(eachSeries, seriesIndex) {
@@ -251,6 +267,21 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
             const color = opts.specialPoint.color || eachSeries.color;
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
+        }
+        if (opts.textPoint && opts.textPoint.enabled) {          
+            // 抓取文字标记点的index，推进队列
+            const textPoints = [];
+            opts.categories.forEach((x, index) => {
+                const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
+                if(theData){
+                    const point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            const backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            const textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
         }
     });
     if (opts.dataLabel !== false && process === 1) {
@@ -662,6 +693,21 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
             const color = opts.specialPoint.color || eachSeries.color;
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
+        }
+        if (opts.textPoint && opts.textPoint.enabled) {          
+            // 抓取文字标记点的index，推进队列
+            const textPoints = [];
+            opts.categories.forEach((x, index) => {
+                const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
+                if(theData){
+                    const point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            const backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            const textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
         }
     });
     // draw label text

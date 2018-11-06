@@ -784,6 +784,48 @@ function drawPointShape(points, color, shape, context) {
     context.stroke();
 }
 
+function drawTextPoint(points, backgroundColor, textColor) {
+    var shape = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fillCircle';
+    var context = arguments[4];
+
+    // 画底色圈
+    context.beginPath();
+    context.setLineWidth(1);
+    context.setFillStyle(backgroundColor);
+    if (shape === 'fillCircle') {
+        points.forEach(function (item, index) {
+            // 获取文本宽度
+            // const textLength = ctx.measureText(item.text);
+            if (item !== null) {
+                context.moveTo(item.x + 3.5, item.y);
+                context.arc(item.x, item.y, 6, 0, 2 * Math.PI, false);
+                context.setStrokeStyle(backgroundColor);
+                context.setFillStyle(backgroundColor);
+            }
+        });
+    }
+    context.closePath();
+    context.fill();
+    context.stroke();
+
+    // 填充字
+    context.beginPath();
+    points.forEach(function (item, index) {
+        // 获取文本宽度
+        // const textLength = ctx.measureText(item.text);
+        if (item !== null) {
+            // 绘制文字
+            context.setFontSize(10);
+            // 字体颜色
+            context.setFillStyle(textColor);
+            context.fillText(item.text, item.x - 3, item.y + 3.5);
+        }
+    });
+    context.closePath();
+    context.fill();
+    context.stroke();
+}
+
 function drawRingTitle(opts, config, context) {
     var titlefontSize = opts.title.fontSize || config.titleFontSize;
     var subtitlefontSize = opts.subtitle.fontSize || config.subtitleFontSize;
@@ -1218,6 +1260,23 @@ function drawAreaDataPoints(series, opts, config, context) {
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
         }
+        if (opts.textPoint && opts.textPoint.enabled) {
+            // 抓取文字标记点的index，推进队列
+            var textPoints = [];
+            opts.categories.forEach(function (x, index) {
+                var theData = (opts.textPoint.data || []).find(function (y) {
+                    return y && y.value == x;
+                });
+                if (theData) {
+                    var point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            var backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            var textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
+        }
     });
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function (eachSeries, seriesIndex) {
@@ -1320,6 +1379,23 @@ function drawLineDataPoints(series, opts, config, context) {
             var color = opts.specialPoint.color || eachSeries.color;
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
+        }
+        if (opts.textPoint && opts.textPoint.enabled) {
+            // 抓取文字标记点的index，推进队列
+            var textPoints = [];
+            opts.categories.forEach(function (x, index) {
+                var theData = (opts.textPoint.data || []).find(function (y) {
+                    return y && y.value == x;
+                });
+                if (theData) {
+                    var point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            var backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            var textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
         }
     });
     if (opts.dataLabel !== false && process === 1) {
@@ -1753,6 +1829,23 @@ function drawRadarDataPoints(series, opts, config, context) {
             drawPointShape(specialActivePoints, activeColor, 'fillCircle', context);
             drawPointShape(specialNormalPoints, color, 'strokeCircle', context);
         }
+        if (opts.textPoint && opts.textPoint.enabled) {
+            // 抓取文字标记点的index，推进队列
+            var textPoints = [];
+            opts.categories.forEach(function (x, index) {
+                var theData = (opts.textPoint.data || []).find(function (y) {
+                    return y && y.value == x;
+                });
+                if (theData) {
+                    var point = Object.assign({}, points[index]);
+                    point.text = theData.text;
+                    textPoints.push(point);
+                }
+            });
+            var backgroundColor = opts.textPoint.bgColor || eachSeries.color;
+            var textColor = opts.textPoint.textColor || '#FFFFFF';
+            drawTextPoint(textPoints, backgroundColor, textColor, 'fillCircle', context);
+        }
     });
     // draw label text
     drawRadarLabel(coordinateAngle, radius, centerPosition, opts, config, context);
@@ -2048,6 +2141,7 @@ Charts.prototype.updateData = function () {
     this.opts.series = data.series || this.opts.series;
     this.opts.categories = data.categories || this.opts.categories;
     this.opts.specialPoint = data.specialPoint || this.opts.specialPoint;
+    this.opts.textPoint = data.textPoint || this.opts.textPoint;
 
     this.opts.title = assign({}, this.opts.title, data.title || {});
     this.opts.subtitle = assign({}, this.opts.subtitle, data.subtitle || {});

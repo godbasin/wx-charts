@@ -138,3 +138,11 @@
 `opts.specialPoint.color` String 特殊点标记数据颜色
 
 `opts.specialPoint.activeColor` String 特殊点标记数据高亮颜色
+
+`opts.textPoint.enabled` Boolean 序号点标注开启（默认false）
+
+`opts.textPoint.data` Array 序号点标记数据，传入与 `opts.categories` 数据匹配则会被标记
+
+`opts.textPoint.bgColor` String 序号点标记背景颜色
+
+`opts.textPoint.textColor` String 序号点标记文字颜色
