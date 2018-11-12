@@ -9,6 +9,8 @@
 
 `showToolTip(e, options?)` 图表中展示数据详细内容(目前仅支持line和area图表类型)，e: `Object`微信小程序标准事件，options: `Object`可选，tooltip的自定义配置，支持option.background，默认为#000000; option.format, `function`类型，接受两个传入的参数，seriesItem(Object, 包括seriesItem.name以及seriesItem.data)和category，可自定义tooltip显示内容。具体可参考wx-charts-demo中line图示例
 
+`showIndexToolTip(index, options?)` 图表中展示数据详细内容(目前仅支持line和area图表类型)，index: 传入需要展示数据详细内容的 index，options: `Object`可选，tooltip的自定义配置，支持option.background，默认为#000000; option.format, `function`类型，接受两个传入的参数，seriesItem(Object, 包括seriesItem.name以及seriesItem.data)和category，可自定义tooltip显示内容。具体可参考wx-charts-demo中line图示例
+
 `scrollStart(e)`, `scroll(e)`, `scrollEnd(e)`设置支持图表拖拽系列事件(支持line, area, column)，具体参考wx-charts-demo中ScrollLine图示例
 
 ## 事件

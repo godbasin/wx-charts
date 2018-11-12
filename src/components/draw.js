@@ -15,7 +15,7 @@ function drawYAxisTitle (title, opts, config, context) {
     context.setFillStyle(opts.yAxis.titleFontColor || '#333333');
     context.translate(0, opts.height);
     context.rotate(-90 * Math.PI / 180);
-    context.fillText(title, startX, config.padding + 0.5 * config.fontSize);
+    context.fillText(title, startX, (opts.padding != undefined ? opts.padding : config.padding) + 0.5 * config.fontSize);
     context.stroke();
     context.closePath();
     context.restore();
@@ -26,7 +26,7 @@ export function drawColumnDataPoints (series, opts, config, context, process = 1
     let { xAxisPoints, eachSpacing } = getXAxisPoints(opts.categories, opts, config);
     let minRange = ranges.pop();
     let maxRange = ranges.shift();
-    let endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    let endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
 
     context.save();
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {    
@@ -44,7 +44,7 @@ export function drawColumnDataPoints (series, opts, config, context, process = 1
         points.forEach(function(item, index) {
             if (item !== null) { 
                 let startX = item.x - item.width / 2 + 1;
-                let height = opts.height - item.y - config.padding - config.xAxisHeight - config.legendHeight;
+                let height = opts.height - item.y - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
                 context.moveTo(startX, item.y);
                 context.rect(startX, item.y, item.width - 2, height);
             }
@@ -72,7 +72,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
     let { xAxisPoints, eachSpacing } = getXAxisPoints(opts.categories, opts, config);
     let minRange = ranges.pop();
     let maxRange = ranges.shift();
-    let endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    let endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     let calPoints = [];
     const lineWidth = opts.lineWidth || 2;
 
@@ -314,7 +314,7 @@ export function drawToolTipBridge (opts, config, context, process) {
 
 export function drawXAxis (categories, opts, config, context) {
     let { xAxisPoints, startX, endX, eachSpacing } = getXAxisPoints(categories, opts, config);
-    let startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    let startY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     let endY = startY + config.xAxisLineHeight;
 
     context.save();
@@ -345,7 +345,7 @@ export function drawXAxis (categories, opts, config, context) {
 
     // 对X轴列表做抽稀处理
     const xAxisSpacing = opts.xAxis.spacing || 1.5;
-    let validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+    let validWidth = opts.width - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.yAxisWidth - config.yAxisTitleWidth;
     let maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / xAxisSpacing));
     let ratio = Math.ceil(categories.length / maxXAxisListLength);
 
@@ -393,17 +393,17 @@ export function drawYAxisGrid (opts, config, context) {
     }
     const yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     const gridLineWidth = opts.yAxis.gridLineWidth || 1;
-    let spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;    
+    let spacingValid = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;    
     let eachSpacing = Math.floor(spacingValid / yAxisSplit);
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;    
-    let startX = config.padding + yAxisTotalWidth;
-    let endX = opts.width - config.padding;
+    let startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    let endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
 
     let points = [];
     for (let i = 0; i < yAxisSplit; i++) {
-        points.push(config.padding + eachSpacing * i);
+        points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * i);
     }
-    points.push(config.padding + eachSpacing * yAxisSplit + 2);
+    points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * yAxisSplit + 2);
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc")
@@ -424,12 +424,12 @@ export function drawYAxis (series, opts, config, context) {
     let { rangesFormat } = calYAxisData(series, opts, config);
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
 
-    let spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    let spacingValid = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     let eachSpacing = Math.floor(spacingValid / yAxisSplit);
-    let startX = config.padding + yAxisTotalWidth;
-    let endX = opts.width - config.padding;
-    let startY = config.padding;
-    let endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    let startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    let endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
+    let startY = (opts.padding != undefined ? opts.padding : config.padding);
+    let endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
 
     // set YAxis background
     context.setFillStyle(opts.background || '#ffffff');
@@ -440,7 +440,7 @@ export function drawYAxis (series, opts, config, context) {
 
     let points = [];
     for (let i = 0; i <= yAxisSplit; i++) {
-        points.push(config.padding + eachSpacing * i);
+        points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * i);
     }
 
     context.stroke();
@@ -449,7 +449,7 @@ export function drawYAxis (series, opts, config, context) {
     context.setFillStyle(opts.yAxis.fontColor || '#666666')
     rangesFormat.forEach(function(item, index) {
         let pos = points[index] ? points[index] : endY;
-        context.fillText(item, config.padding + config.yAxisTitleWidth, pos + config.fontSize / 2);
+        context.fillText(item, (opts.padding != undefined ? opts.padding : config.padding) + config.yAxisTitleWidth, pos + config.fontSize / 2);
     });
     context.closePath();
     context.stroke();
@@ -466,7 +466,7 @@ export function drawLegend (series, opts, config, context) {
     // each legend shape width 15px
     // the spacing between shape and text in each legend is the `padding`
     // each legend spacing is the `padding`
-    // legend margin top `config.padding`
+    // legend margin top `(opts.padding != undefined ? opts.padding : config.padding)`
     let { legendList, legendHeight } = calLegendData(series, opts, config);
     let padding = 5;
     let marginTop = 8;
@@ -479,7 +479,7 @@ export function drawLegend (series, opts, config, context) {
             width += 3 * padding + measureText(item.name) + shapeWidth;
         });
         let startX = (opts.width - width) / 2 + padding;
-        let startY = opts.height - config.padding - config.legendHeight + listIndex * (config.fontSize + marginTop) + padding + marginTop;
+        let startY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.legendHeight + listIndex * (config.fontSize + marginTop) + padding + marginTop;
 
         context.setFontSize(config.fontSize);
         itemList.forEach(function (item) {
@@ -544,7 +544,7 @@ export function drawPieDataPoints (series, opts, config, context, process = 1) {
     if (opts.dataLabel) {
         radius -= 10;
     } else {
-        radius -= 2 * config.padding;
+        radius -= 2 * (opts.padding != undefined ? opts.padding : config.padding);
     }
     series = series.map((eachSeries) => {
         eachSeries._start_ += (pieOption.offsetAngle || 0) * Math.PI / 180;
@@ -617,7 +617,7 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
     );
     const lineWidth = opts.lineWidth || 1;
 
-    radius -= config.padding;
+    radius -= (opts.padding != undefined ? opts.padding : config.padding);
 
     // draw grid
     context.beginPath();

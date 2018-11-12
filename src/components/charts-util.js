@@ -29,7 +29,7 @@ function findRange (num, type, limit) {
 
 export function calValidDistance (distance, chartData, config, opts) {
 
-    let dataChartAreaWidth = opts.width - config.padding - chartData.xAxisPoints[0];
+    let dataChartAreaWidth = opts.width - (opts.padding != undefined ? opts.padding : config.padding) - chartData.xAxisPoints[0];
     let dataChartWidth = chartData.eachSpacing * opts.categories.length;
     let validDistance = distance;
     if (distance >= 0) {

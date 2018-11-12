@@ -124,7 +124,7 @@ function findRange(num, type, limit) {
 
 function calValidDistance(distance, chartData, config, opts) {
 
-    var dataChartAreaWidth = opts.width - config.padding - chartData.xAxisPoints[0];
+    var dataChartAreaWidth = opts.width - (opts.padding != undefined ? opts.padding : config.padding) - chartData.xAxisPoints[0];
     var dataChartWidth = chartData.eachSpacing * opts.categories.length;
     var validDistance = distance;
     if (distance >= 0) {
@@ -401,7 +401,7 @@ function findCurrentIndex(currentPoints, xAxisPoints, opts, config) {
 }
 
 function isInExactChartArea(currentPoints, opts, config) {
-    return currentPoints.x < opts.width - config.padding && currentPoints.x > config.padding + config.yAxisWidth + config.yAxisTitleWidth && currentPoints.y > config.padding && currentPoints.y < opts.height - config.legendHeight - config.xAxisHeight - config.padding;
+    return currentPoints.x < opts.width - (opts.padding != undefined ? opts.padding : config.padding) && currentPoints.x > (opts.padding != undefined ? opts.padding : config.padding) + config.yAxisWidth + config.yAxisTitleWidth && currentPoints.y > (opts.padding != undefined ? opts.padding : config.padding) && currentPoints.y < opts.height - config.legendHeight - config.xAxisHeight - (opts.padding != undefined ? opts.padding : config.padding);
 }
 
 function findRadarChartCurrentIndex(currentPoints, radarData, count) {
@@ -628,13 +628,13 @@ function fixColumeData(points, eachSpacing, columnLen, index, config, opts) {
 
 function getXAxisPoints(categories, opts, config) {
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    var spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth;
+    var spacingValid = opts.width - 2 * (opts.padding != undefined ? opts.padding : config.padding) - yAxisTotalWidth;
     var dataCount = opts.enableScroll ? Math.min(5, categories.length) : categories.length;
     var eachSpacing = spacingValid / dataCount;
 
     var xAxisPoints = [];
-    var startX = config.padding + yAxisTotalWidth;
-    var endX = opts.width - config.padding;
+    var startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    var endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
     categories.forEach(function (item, index) {
         xAxisPoints.push(startX + index * eachSpacing);
     });
@@ -651,7 +651,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
     var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
 
     var points = [];
-    var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    var validHeight = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     data.forEach(function (item, index) {
         if (item === null) {
             points.push(null);
@@ -660,7 +660,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
             point.x = xAxisPoints[index] + Math.round(eachSpacing / 2);
             var height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
-            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - config.padding;
+            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - (opts.padding != undefined ? opts.padding : config.padding);
             points.push(point);
         }
     });
@@ -1009,8 +1009,8 @@ function drawPieText(series, opts, config, context, radius, center) {
 }
 
 function drawToolTipSplitLine(offsetX, opts, config, context) {
-    var startY = config.padding;
-    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var startY = opts.padding != undefined ? opts.padding : config.padding;
+    var endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     context.beginPath();
     context.setStrokeStyle('#cccccc');
     context.setLineWidth(1);
@@ -1101,7 +1101,7 @@ function drawYAxisTitle(title, opts, config, context) {
     context.setFillStyle(opts.yAxis.titleFontColor || '#333333');
     context.translate(0, opts.height);
     context.rotate(-90 * Math.PI / 180);
-    context.fillText(title, startX, config.padding + 0.5 * config.fontSize);
+    context.fillText(title, startX, (opts.padding != undefined ? opts.padding : config.padding) + 0.5 * config.fontSize);
     context.stroke();
     context.closePath();
     context.restore();
@@ -1119,7 +1119,7 @@ function drawColumnDataPoints(series, opts, config, context) {
 
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
-    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
 
     context.save();
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
@@ -1137,7 +1137,7 @@ function drawColumnDataPoints(series, opts, config, context) {
         points.forEach(function (item, index) {
             if (item !== null) {
                 var startX = item.x - item.width / 2 + 1;
-                var height = opts.height - item.y - config.padding - config.xAxisHeight - config.legendHeight;
+                var height = opts.height - item.y - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
                 context.moveTo(startX, item.y);
                 context.rect(startX, item.y, item.width - 2, height);
             }
@@ -1172,7 +1172,7 @@ function drawAreaDataPoints(series, opts, config, context) {
 
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
-    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     var calPoints = [];
     var lineWidth = opts.lineWidth || 2;
 
@@ -1433,7 +1433,7 @@ function drawXAxis(categories, opts, config, context) {
         endX = _getXAxisPoints4.endX,
         eachSpacing = _getXAxisPoints4.eachSpacing;
 
-    var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var startY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     var endY = startY + config.xAxisLineHeight;
 
     context.save();
@@ -1464,7 +1464,7 @@ function drawXAxis(categories, opts, config, context) {
 
     // 对X轴列表做抽稀处理
     var xAxisSpacing = opts.xAxis.spacing || 1.5;
-    var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+    var validWidth = opts.width - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.yAxisWidth - config.yAxisTitleWidth;
     var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / xAxisSpacing));
     var ratio = Math.ceil(categories.length / maxXAxisListLength);
 
@@ -1516,17 +1516,17 @@ function drawYAxisGrid(opts, config, context) {
     }
     var yAxisSplit = opts.yAxis.split || config.yAxisSplit;
     var gridLineWidth = opts.yAxis.gridLineWidth || 1;
-    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    var spacingValid = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     var eachSpacing = Math.floor(spacingValid / yAxisSplit);
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    var startX = config.padding + yAxisTotalWidth;
-    var endX = opts.width - config.padding;
+    var startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    var endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
 
     var points = [];
     for (var i = 0; i < yAxisSplit; i++) {
-        points.push(config.padding + eachSpacing * i);
+        points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * i);
     }
-    points.push(config.padding + eachSpacing * yAxisSplit + 2);
+    points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * yAxisSplit + 2);
 
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
@@ -1550,12 +1550,12 @@ function drawYAxis(series, opts, config, context) {
 
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
 
-    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    var spacingValid = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     var eachSpacing = Math.floor(spacingValid / yAxisSplit);
-    var startX = config.padding + yAxisTotalWidth;
-    var endX = opts.width - config.padding;
-    var startY = config.padding;
-    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    var endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
+    var startY = opts.padding != undefined ? opts.padding : config.padding;
+    var endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
 
     // set YAxis background
     context.setFillStyle(opts.background || '#ffffff');
@@ -1566,7 +1566,7 @@ function drawYAxis(series, opts, config, context) {
 
     var points = [];
     for (var i = 0; i <= yAxisSplit; i++) {
-        points.push(config.padding + eachSpacing * i);
+        points.push((opts.padding != undefined ? opts.padding : config.padding) + eachSpacing * i);
     }
 
     context.stroke();
@@ -1575,7 +1575,7 @@ function drawYAxis(series, opts, config, context) {
     context.setFillStyle(opts.yAxis.fontColor || '#666666');
     rangesFormat.forEach(function (item, index) {
         var pos = points[index] ? points[index] : endY;
-        context.fillText(item, config.padding + config.yAxisTitleWidth, pos + config.fontSize / 2);
+        context.fillText(item, (opts.padding != undefined ? opts.padding : config.padding) + config.yAxisTitleWidth, pos + config.fontSize / 2);
     });
     context.closePath();
     context.stroke();
@@ -1592,7 +1592,7 @@ function drawLegend(series, opts, config, context) {
     // each legend shape width 15px
     // the spacing between shape and text in each legend is the `padding`
     // each legend spacing is the `padding`
-    // legend margin top `config.padding`
+    // legend margin top `(opts.padding != undefined ? opts.padding : config.padding)`
 
     var _calLegendData = calLegendData(series, opts, config),
         legendList = _calLegendData.legendList,
@@ -1609,7 +1609,7 @@ function drawLegend(series, opts, config, context) {
             width += 3 * padding + measureText(item.name) + shapeWidth;
         });
         var startX = (opts.width - width) / 2 + padding;
-        var startY = opts.height - config.padding - config.legendHeight + listIndex * (config.fontSize + marginTop) + padding + marginTop;
+        var startY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.legendHeight + listIndex * (config.fontSize + marginTop) + padding + marginTop;
 
         context.setFontSize(config.fontSize);
         itemList.forEach(function (item) {
@@ -1673,7 +1673,7 @@ function drawPieDataPoints(series, opts, config, context) {
     if (opts.dataLabel) {
         radius -= 10;
     } else {
-        radius -= 2 * config.padding;
+        radius -= 2 * (opts.padding != undefined ? opts.padding : config.padding);
     }
     series = series.map(function (eachSeries) {
         eachSeries._start_ += (pieOption.offsetAngle || 0) * Math.PI / 180;
@@ -1745,7 +1745,7 @@ function drawRadarDataPoints(series, opts, config, context) {
     var radius = Math.min(centerPosition.x - (getMaxTextListLength(opts.categories) + config.radarLabelTextMargin), centerPosition.y - config.radarLabelTextMargin);
     var lineWidth = opts.lineWidth || 1;
 
-    radius -= config.padding;
+    radius -= opts.padding != undefined ? opts.padding : config.padding;
 
     // draw grid
     context.beginPath();
@@ -2192,6 +2192,35 @@ Charts.prototype.showToolTip = function (e) {
                 var _getToolTipData = getToolTipData(seriesData, this.chartData.calPoints, index, this.opts.categories, option),
                     textList = _getToolTipData.textList,
                     offset = _getToolTipData.offset;
+
+                opts.tooltip = {
+                    textList: textList,
+                    offset: offset,
+                    option: option
+                };
+            }
+        }
+        drawCharts.call(this, opts.type, opts, this.config, this.context);
+    }
+};
+
+Charts.prototype.showIndexToolTip = function () {
+    var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
+    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    if (this.opts.type === 'line' || this.opts.type === 'area') {
+        var currentOffset = this.scrollOption.currentOffset;
+
+        var opts = assign({}, this.opts, {
+            _scrollDistance_: currentOffset,
+            animation: false
+        });
+        if (index > -1) {
+            var seriesData = getSeriesDataItem(this.opts.series, index);
+            if (seriesData.length !== 0) {
+                var _getToolTipData2 = getToolTipData(seriesData, this.chartData.calPoints, index, this.opts.categories, option),
+                    textList = _getToolTipData2.textList,
+                    offset = _getToolTipData2.offset;
 
                 opts.tooltip = {
                     textList: textList,

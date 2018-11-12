@@ -146,3 +146,5 @@
 `opts.textPoint.bgColor` String 序号点标记背景颜色
 
 `opts.textPoint.textColor` String 序号点标记文字颜色
+
+`opts.padding` Number canvas padding 配置

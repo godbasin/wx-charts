@@ -85,10 +85,10 @@ export function findCurrentIndex (currentPoints, xAxisPoints, opts, config, offs
 }
 
 export function isInExactChartArea (currentPoints, opts, config) {
-    return currentPoints.x < opts.width - config.padding
-        && currentPoints.x > config.padding + config.yAxisWidth + config.yAxisTitleWidth
-        && currentPoints.y > config.padding
-        && currentPoints.y < opts.height - config.legendHeight - config.xAxisHeight - config.padding
+    return currentPoints.x < opts.width - (opts.padding != undefined ? opts.padding : config.padding)
+        && currentPoints.x > (opts.padding != undefined ? opts.padding : config.padding) + config.yAxisWidth + config.yAxisTitleWidth
+        && currentPoints.y > (opts.padding != undefined ? opts.padding : config.padding)
+        && currentPoints.y < opts.height - config.legendHeight - config.xAxisHeight - (opts.padding != undefined ? opts.padding : config.padding)
 }
 
 export function findRadarChartCurrentIndex (currentPoints, radarData, count) {
@@ -307,13 +307,13 @@ export function fixColumeData(points, eachSpacing, columnLen, index, config, opt
 
 export function getXAxisPoints(categories, opts, config) {
     let yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    let spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth;
+    let spacingValid = opts.width - 2 * (opts.padding != undefined ? opts.padding : config.padding) - yAxisTotalWidth;
     let dataCount = opts.enableScroll ? Math.min(5, categories.length) : categories.length;
     let eachSpacing = spacingValid / dataCount;
 
     let xAxisPoints = [];
-    let startX = config.padding + yAxisTotalWidth;
-    let endX = opts.width - config.padding;
+    let startX = (opts.padding != undefined ? opts.padding : config.padding) + yAxisTotalWidth;
+    let endX = opts.width - (opts.padding != undefined ? opts.padding : config.padding);
     categories.forEach(function(item, index) {
         xAxisPoints.push(startX + index * eachSpacing);
     });
@@ -328,7 +328,7 @@ export function getXAxisPoints(categories, opts, config) {
 
 export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process = 1) {
     let points = [];
-    let validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    let validHeight = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     data.forEach(function(item, index) {
         if (item === null) {
             points.push(null);
@@ -337,7 +337,7 @@ export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing
             point.x = xAxisPoints[index] + Math.round(eachSpacing / 2);
             let height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
-            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - config.padding;
+            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - (opts.padding != undefined ? opts.padding : config.padding);
             points.push(point);
         }
     });

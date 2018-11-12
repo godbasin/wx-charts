@@ -92,6 +92,28 @@ Charts.prototype.showToolTip = function (e, option = {}) {
     }
 }
 
+Charts.prototype.showIndexToolTip = function (index = -1, option = {}) {
+    if (this.opts.type === 'line' || this.opts.type === 'area') {
+        let { currentOffset } = this.scrollOption;
+        let opts = assign({}, this.opts, {
+            _scrollDistance_: currentOffset,
+            animation: false
+        });
+        if (index > -1) {
+            let seriesData = getSeriesDataItem(this.opts.series, index);
+            if (seriesData.length !== 0) {
+                let { textList, offset } = getToolTipData(seriesData, this.chartData.calPoints, index, this.opts.categories, option);
+                opts.tooltip = {
+                    textList,
+                    offset,
+                    option
+                };
+            }
+        }
+        drawCharts.call(this, opts.type, opts, this.config, this.context);        
+    }
+}
+
 Charts.prototype.scrollStart = function (e) {
     if (e.touches[0] && this.opts.enableScroll === true) {
         this.scrollOption.startTouchX = e.touches[0].x;

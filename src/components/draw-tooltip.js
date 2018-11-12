@@ -2,8 +2,8 @@ import { measureText } from './charts-util'
 import { assign } from '../util/polyfill/index';
 
 export function drawToolTipSplitLine(offsetX, opts, config, context) {
-    let startY = config.padding;
-    let endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    let startY = (opts.padding != undefined ? opts.padding : config.padding);
+    let endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     context.beginPath();
     context.setStrokeStyle('#cccccc');
     context.setLineWidth(1);
