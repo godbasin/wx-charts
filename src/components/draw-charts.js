@@ -3,7 +3,7 @@ import { calYAxisData, getPieTextMaxLength, calCategoriesData, calLegendData } f
 import { fillSeriesColor } from './charts-util';
 import Animation from './animation'
 
-export default function drawCharts (type, opts, config, context) {
+export default function drawCharts (type, opts, config, context, callback = () => {}) {
     let series = opts.series;
     let categories = opts.categories;
     series = fillSeriesColor(series, config);
@@ -43,6 +43,7 @@ export default function drawCharts (type, opts, config, context) {
                 },
                 onAnimationFinish: () => {
                     this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -62,6 +63,7 @@ export default function drawCharts (type, opts, config, context) {
                 },
                 onAnimationFinish: () => {
                     this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -83,6 +85,7 @@ export default function drawCharts (type, opts, config, context) {
                 },
                 onAnimationFinish: () => {
                     this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -98,6 +101,7 @@ export default function drawCharts (type, opts, config, context) {
                 },
                 onAnimationFinish: () => {
                     this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -112,6 +116,7 @@ export default function drawCharts (type, opts, config, context) {
                 },
                 onAnimationFinish: () => {
                     this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;

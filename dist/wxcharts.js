@@ -1942,6 +1942,8 @@ Animation.prototype.stop = function () {
 function drawCharts(type, opts, config, context) {
     var _this = this;
 
+    var callback = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : function () {};
+
     var series = opts.series;
     var categories = opts.categories;
     series = fillSeriesColor(series, config);
@@ -1993,6 +1995,7 @@ function drawCharts(type, opts, config, context) {
                 },
                 onAnimationFinish: function onAnimationFinish() {
                     _this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -2016,6 +2019,7 @@ function drawCharts(type, opts, config, context) {
                 },
                 onAnimationFinish: function onAnimationFinish() {
                     _this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -2042,6 +2046,7 @@ function drawCharts(type, opts, config, context) {
                 },
                 onAnimationFinish: function onAnimationFinish() {
                     _this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -2057,6 +2062,7 @@ function drawCharts(type, opts, config, context) {
                 },
                 onAnimationFinish: function onAnimationFinish() {
                     _this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -2071,6 +2077,7 @@ function drawCharts(type, opts, config, context) {
                 },
                 onAnimationFinish: function onAnimationFinish() {
                     _this.event.trigger('renderComplete');
+                    callback();
                 }
             });
             break;
@@ -2136,17 +2143,23 @@ var Charts = function Charts(opts) {
 };
 
 Charts.prototype.updateData = function () {
+    var _this = this;
+
     var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    this.opts.series = data.series || this.opts.series;
-    this.opts.categories = data.categories || this.opts.categories;
-    this.opts.specialPoint = data.specialPoint || this.opts.specialPoint;
-    this.opts.textPoint = data.textPoint || this.opts.textPoint;
+    return new Promise(function (resolve) {
+        _this.opts.series = data.series || _this.opts.series;
+        _this.opts.categories = data.categories || _this.opts.categories;
+        _this.opts.specialPoint = data.specialPoint || _this.opts.specialPoint;
+        _this.opts.textPoint = data.textPoint || _this.opts.textPoint;
 
-    this.opts.title = assign({}, this.opts.title, data.title || {});
-    this.opts.subtitle = assign({}, this.opts.subtitle, data.subtitle || {});
+        _this.opts.title = assign({}, _this.opts.title, data.title || {});
+        _this.opts.subtitle = assign({}, _this.opts.subtitle, data.subtitle || {});
 
-    drawCharts.call(this, this.opts.type, this.opts, this.config, this.context);
+        drawCharts.call(_this, _this.opts.type, _this.opts, _this.config, _this.context, function () {
+            resolve();
+        });
+    });
 };
 
 Charts.prototype.stopAnimation = function () {

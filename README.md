@@ -17,6 +17,7 @@
 
 # 更新记录 
 
+- [x] 更新`updateData()`方法，返回 promise（在更新渲染完毕时触发`resolve`）
 - [x] 新增canvas padding配置（`opts.padding` Number）
 - [x] 新增`showIndexToolTip()`方法，支持根据`index`展示数据详细内容
 - [x] 新增支持特殊点标注（`opts.specialPoint` Object、序号点标注`opts.textPoint`）
