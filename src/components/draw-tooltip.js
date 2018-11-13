@@ -4,13 +4,16 @@ import { assign } from '../util/polyfill/index';
 export function drawToolTipSplitLine(offsetX, opts, config, context) {
     let startY = (opts.padding != undefined ? opts.padding : config.padding);
     let endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
-    context.beginPath();
-    context.setStrokeStyle('#cccccc');
+    context.save();
+    context.setStrokeStyle('#4AA1FF');
+    context.setLineDash([1, 2]);
     context.setLineWidth(1);
+    context.beginPath();
     context.moveTo(offsetX, startY);
     context.lineTo(offsetX, endY);
     context.stroke();
     context.closePath();
+    context.restore();
 }
 
 export function drawToolTip(textList, offset, opts, config, context) {

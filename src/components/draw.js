@@ -5,6 +5,7 @@ import drawPointShape from './draw-data-shape'
 import drawTextPoint from './draw-text-point'
 import { drawPointText, drawPieText, drawRingTitle, drawRadarLabel } from './draw-data-text'
 import { drawToolTip, drawToolTipSplitLine } from './draw-tooltip'
+import { drawPointTip } from './draw-pointtip'
 import { assign } from '../util/polyfill/index';
 
 function drawYAxisTitle (title, opts, config, context) {
@@ -205,11 +206,6 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
         context.translate(opts._scrollDistance_, 0);
     }
 
-    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
-        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
-    }
-
-
     series.forEach(function(eachSeries, seriesIndex) {
         let data = eachSeries.data;
         let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
@@ -302,12 +298,35 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
 }
 
 export function drawToolTipBridge (opts, config, context, process) {
+    if(opts.isPointTip){
+        return;
+    }
     context.save();
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
+    }
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {    
         context.translate(opts._scrollDistance_, 0);
     }    
     if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
         drawToolTip(opts.tooltip.textList, opts.tooltip.offset, opts, config, context);
+    }
+    context.restore();
+}
+
+export function drawPointTipBridge (opts, config, context, process) {
+    if(!opts.isPointTip){
+        return;
+    }
+    context.save();
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
+    }
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {    
+        context.translate(opts._scrollDistance_, 0);
+    }    
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawPointTip(opts.tooltip.textList, opts.tooltip.offset, opts, config, context);
     }
     context.restore();
 }

@@ -101,7 +101,8 @@ Charts.prototype.showIndexToolTip = function (index = -1, option = {}) {
         let { currentOffset } = this.scrollOption;
         let opts = assign({}, this.opts, {
             _scrollDistance_: currentOffset,
-            animation: false
+            animation: false,
+            isPointTip: true
         });
         if (index > -1) {
             let seriesData = getSeriesDataItem(this.opts.series, index);

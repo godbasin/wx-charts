@@ -1011,13 +1011,16 @@ function drawPieText(series, opts, config, context, radius, center) {
 function drawToolTipSplitLine(offsetX, opts, config, context) {
     var startY = opts.padding != undefined ? opts.padding : config.padding;
     var endY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
-    context.beginPath();
-    context.setStrokeStyle('#cccccc');
+    context.save();
+    context.setStrokeStyle('#4AA1FF');
+    context.setLineDash([1, 2]);
     context.setLineWidth(1);
+    context.beginPath();
     context.moveTo(offsetX, startY);
     context.lineTo(offsetX, endY);
     context.stroke();
     context.closePath();
+    context.restore();
 }
 
 function drawToolTip(textList, offset, opts, config, context) {
@@ -1087,6 +1090,57 @@ function drawToolTip(textList, offset, opts, config, context) {
             startX = offset.x - toolTipWidth - arrowWidth + 2 * config.toolTipPadding + +legendWidth + legendMarginRight;
         }
         var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding;
+        context.fillText(item.text, startX, startY + config.fontSize);
+    });
+    context.stroke();
+    context.closePath();
+}
+
+function drawPointTip(textList, offset, opts, config, context) {
+    var legendWidth = 4;
+    var legendMarginRight = 5;
+    var arrowWidth = 8;
+    var isOverRightBorder = false;
+    offset = assign({
+        x: 0,
+        y: 0
+    }, offset);
+    offset.y -= 8;
+    var textWidth = textList.map(function (item) {
+        return measureText(item.text);
+    });
+
+    var toolTipWidth = legendWidth + legendMarginRight + 4 * config.toolTipPadding + Math.max.apply(null, textWidth);
+    var toolTipHeight = 2 * config.toolTipPadding + textList.length * config.toolTipLineHeight;
+
+    // if beyond the right border
+    if (offset.x - Math.abs(opts._scrollDistance_) + arrowWidth + toolTipWidth > opts.width) {
+        isOverRightBorder = true;
+    }
+
+    // draw horizontal line
+    context.save();
+    context.setStrokeStyle('#4AA1FF');
+    context.setLineDash([1, 2]);
+    context.setLineWidth(1);
+    context.beginPath();
+    var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipPadding + 2;
+    context.moveTo(0, startY);
+    context.lineTo(opts.width, startY);
+    context.closePath();
+    context.stroke();
+    context.restore();
+
+    // draw text list
+    context.beginPath();
+    context.setFontSize(config.fontSize);
+    context.setFillStyle('#007AFF');
+    textList.forEach(function (item, index) {
+        var startX = offset.x - arrowWidth + 2 * config.toolTipPadding + legendMarginRight;
+        if (isOverRightBorder) {
+            startX = offset.x - toolTipWidth + 2 * config.toolTipPadding + legendWidth + legendMarginRight;
+        }
+        var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 10;
         context.fillText(item.text, startX, startY + config.fontSize);
     });
     context.stroke();
@@ -1316,10 +1370,6 @@ function drawLineDataPoints(series, opts, config, context) {
         context.translate(opts._scrollDistance_, 0);
     }
 
-    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
-        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
-    }
-
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
@@ -1416,12 +1466,35 @@ function drawLineDataPoints(series, opts, config, context) {
 }
 
 function drawToolTipBridge(opts, config, context, process) {
+    if (opts.isPointTip) {
+        return;
+    }
     context.save();
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
+    }
     if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
         context.translate(opts._scrollDistance_, 0);
     }
     if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
         drawToolTip(opts.tooltip.textList, opts.tooltip.offset, opts, config, context);
+    }
+    context.restore();
+}
+
+function drawPointTipBridge(opts, config, context, process) {
+    if (!opts.isPointTip) {
+        return;
+    }
+    context.save();
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawToolTipSplitLine(opts.tooltip.offset.x, opts, config, context);
+    }
+    if (opts._scrollDistance_ && opts._scrollDistance_ !== 0 && opts.enableScroll === true) {
+        context.translate(opts._scrollDistance_, 0);
+    }
+    if (opts.tooltip && opts.tooltip.textList && opts.tooltip.textList.length && process === 1) {
+        drawPointTip(opts.tooltip.textList, opts.tooltip.offset, opts, config, context);
     }
     context.restore();
 }
@@ -1991,6 +2064,7 @@ function drawCharts(type, opts, config, context) {
                     drawLegend(opts.series, opts, config, context);
                     drawYAxis(series, opts, config, context);
                     drawToolTipBridge(opts, config, context, process);
+                    drawPointTipBridge(opts, config, context, process);
                     drawCanvas(opts, context);
                 },
                 onAnimationFinish: function onAnimationFinish() {
@@ -2226,7 +2300,8 @@ Charts.prototype.showIndexToolTip = function () {
 
         var opts = assign({}, this.opts, {
             _scrollDistance_: currentOffset,
-            animation: false
+            animation: false,
+            isPointTip: true
         });
         if (index > -1) {
             var seriesData = getSeriesDataItem(this.opts.series, index);
