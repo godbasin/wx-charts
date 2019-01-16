@@ -96,7 +96,7 @@ Charts.prototype.showToolTip = function (e, option = {}) {
     }
 }
 
-Charts.prototype.showIndexToolTip = function (index = -1, option = {}) {
+Charts.prototype.showIndexToolTip = function (index = -1, option = {}, seriesIndexList) {
     if (this.opts.type === 'line' || this.opts.type === 'area') {
         let { currentOffset } = this.scrollOption;
         let opts = assign({}, this.opts, {
@@ -105,9 +105,15 @@ Charts.prototype.showIndexToolTip = function (index = -1, option = {}) {
             isPointTip: true
         });
         if (index > -1) {
-            let seriesData = getSeriesDataItem(this.opts.series, index);
+            let series = this.opts.series || [];
+            let calPoints = this.chartData.calPoints || [];
+            if(seriesIndexList && seriesIndexList.length){
+                series = series.filter((x, i) => seriesIndexList.indexOf(i) > -1);
+                calPoints = calPoints.filter((x, i) => seriesIndexList.indexOf(i) > -1);
+            };
+            const seriesData = getSeriesDataItem(series, index);
             if (seriesData.length !== 0) {
-                let { textList, offset } = getToolTipData(seriesData, this.chartData.calPoints, index, this.opts.categories, option);
+                let { textList, offset } = getToolTipData(seriesData, calPoints, index, this.opts.categories, option);
                 opts.tooltip = {
                     textList,
                     offset,

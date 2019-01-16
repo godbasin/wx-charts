@@ -36,7 +36,7 @@ export function drawColumnDataPoints (series, opts, config, context, process = 1
 
     series.forEach(function(eachSeries, seriesIndex) {
         let data = eachSeries.data;
-        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
 
         // 绘制柱状数据图
@@ -55,7 +55,7 @@ export function drawColumnDataPoints (series, opts, config, context, process = 1
     });
     series.forEach(function(eachSeries, seriesIndex) {
         let data = eachSeries.data;
-        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
         if (opts.dataLabel !== false && process === 1) {
             drawPointText(points, eachSeries, config, context);
@@ -89,7 +89,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
 
     series.forEach(function(eachSeries, seriesIndex) {
         let data = eachSeries.data;
-        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         calPoints.push(points);
 
         let splitPointList = splitPoints(points);
@@ -165,7 +165,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
             const textPoints = [];
             opts.categories.forEach((x, index) => {
                 const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
-                if(theData){
+                if(theData && theData.seriesIndex === points[index].seriesIndex){
                     const point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);
@@ -179,7 +179,7 @@ export function drawAreaDataPoints (series, opts, config, context, process = 1) 
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function(eachSeries, seriesIndex) {
             let data = eachSeries.data;
-            let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+            let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
             drawPointText(points, eachSeries, config, context);
         });
     }
@@ -208,7 +208,7 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
 
     series.forEach(function(eachSeries, seriesIndex) {
         let data = eachSeries.data;
-        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         calPoints.push(points);
         let splitPointList = splitPoints(points);
 
@@ -269,7 +269,7 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
             const textPoints = [];
             opts.categories.forEach((x, index) => {
                 const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
-                if(theData){
+                if(theData && theData.seriesIndex === points[index].seriesIndex){
                     const point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);
@@ -283,7 +283,7 @@ export function drawLineDataPoints (series, opts, config, context, process = 1) 
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function(eachSeries, seriesIndex) {
             let data = eachSeries.data;
-            let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+            let points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
             drawPointText(points, eachSeries, config, context);
         });
     }
@@ -718,7 +718,7 @@ export function drawRadarDataPoints (series, opts, config, context, process = 1)
             const textPoints = [];
             opts.categories.forEach((x, index) => {
                 const theData = (opts.textPoint.data || []).find(y => y && (y.value == x));
-                if(theData){
+                if(theData && theData.seriesIndex === points[index].seriesIndex){
                     const point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);

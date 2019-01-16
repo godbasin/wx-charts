@@ -17,6 +17,8 @@
 
 # 更新记录 
 
+- [x] 更新序号点标注`opts.textPoint`，支持根据`seriesIndex`匹配多曲线时对应的哪根曲线展示
+- [x] 更新`showIndexToolTip()`方法，支持根据`seriesIndexList`设置多曲线时对应的哪根曲线展示
 - [x] 更新`updateData()`方法，返回 promise（在更新渲染完毕时触发`resolve`）
 - [x] 新增canvas padding配置（`opts.padding` Number）
 - [x] 新增`showIndexToolTip()`方法，支持根据`index`展示数据详细内容

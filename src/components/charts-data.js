@@ -326,7 +326,7 @@ export function getXAxisPoints(categories, opts, config) {
     return { xAxisPoints, startX, endX, eachSpacing };
 }
 
-export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process = 1) {
+export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process = 1) {
     let points = [];
     let validHeight = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
     data.forEach(function(item, index) {
@@ -338,6 +338,7 @@ export function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing
             let height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
             point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - (opts.padding != undefined ? opts.padding : config.padding);
+            point.seriesIndex = seriesIndex;
             points.push(point);
         }
     });

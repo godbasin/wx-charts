@@ -141,7 +141,7 @@
 
 `opts.textPoint.enabled` Boolean 序号点标注开启（默认false）
 
-`opts.textPoint.data` Array 序号点标记数据，传入与 `opts.categories` 数据匹配则会被标记
+`opts.textPoint.data` Array 序号点标记数据，传入`value`与 `opts.categories` 数据匹配，且`seriesIndex`与多曲线对应曲线匹配则会被标记
 
 `opts.textPoint.bgColor` String 序号点标记背景颜色
 

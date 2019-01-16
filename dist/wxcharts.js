@@ -1,12 +1,3 @@
-/*
- * charts for WeChat small app v1.0
- *
- * https://github.com/xiaolin3303/wx-charts
- * 2016-11-28
- *
- * Designed and built with all the love of Web
- */
-
 'use strict';
 
 var config = {
@@ -336,8 +327,6 @@ function getSeriesDataItem(series, index) {
     return data;
 }
 
-
-
 function getMaxTextListLength(list) {
     var lengthList = list.map(function (item) {
         return measureText(item);
@@ -647,8 +636,8 @@ function getXAxisPoints(categories, opts, config) {
     return { xAxisPoints: xAxisPoints, startX: startX, endX: endX, eachSpacing: eachSpacing };
 }
 
-function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config) {
-    var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
+function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex) {
+    var process = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : 1;
 
     var points = [];
     var validHeight = opts.height - 2 * (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
@@ -661,6 +650,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
             var height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
             point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - (opts.padding != undefined ? opts.padding : config.padding);
+            point.seriesIndex = seriesIndex;
             points.push(point);
         }
     });
@@ -1182,7 +1172,7 @@ function drawColumnDataPoints(series, opts, config, context) {
 
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
-        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
 
         // 绘制柱状数据图
@@ -1201,7 +1191,7 @@ function drawColumnDataPoints(series, opts, config, context) {
     });
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
-        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
         if (opts.dataLabel !== false && process === 1) {
             drawPointText(points, eachSeries, config, context);
@@ -1241,7 +1231,7 @@ function drawAreaDataPoints(series, opts, config, context) {
 
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
-        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         calPoints.push(points);
 
         var splitPointList = splitPoints(points);
@@ -1321,7 +1311,7 @@ function drawAreaDataPoints(series, opts, config, context) {
                 var theData = (opts.textPoint.data || []).find(function (y) {
                     return y && y.value == x;
                 });
-                if (theData) {
+                if (theData && theData.seriesIndex === points[index].seriesIndex) {
                     var point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);
@@ -1335,7 +1325,7 @@ function drawAreaDataPoints(series, opts, config, context) {
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function (eachSeries, seriesIndex) {
             var data = eachSeries.data;
-            var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+            var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
             drawPointText(points, eachSeries, config, context);
         });
     }
@@ -1372,7 +1362,7 @@ function drawLineDataPoints(series, opts, config, context) {
 
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
-        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
         calPoints.push(points);
         var splitPointList = splitPoints(points);
 
@@ -1437,7 +1427,7 @@ function drawLineDataPoints(series, opts, config, context) {
                 var theData = (opts.textPoint.data || []).find(function (y) {
                     return y && y.value == x;
                 });
-                if (theData) {
+                if (theData && theData.seriesIndex === points[index].seriesIndex) {
                     var point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);
@@ -1451,7 +1441,7 @@ function drawLineDataPoints(series, opts, config, context) {
     if (opts.dataLabel !== false && process === 1) {
         series.forEach(function (eachSeries, seriesIndex) {
             var data = eachSeries.data;
-            var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+            var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, seriesIndex, process);
             drawPointText(points, eachSeries, config, context);
         });
     }
@@ -1502,8 +1492,6 @@ function drawPointTipBridge(opts, config, context, process) {
 function drawXAxis(categories, opts, config, context) {
     var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
         xAxisPoints = _getXAxisPoints4.xAxisPoints,
-        startX = _getXAxisPoints4.startX,
-        endX = _getXAxisPoints4.endX,
         eachSpacing = _getXAxisPoints4.eachSpacing;
 
     var startY = opts.height - (opts.padding != undefined ? opts.padding : config.padding) - config.xAxisHeight - config.legendHeight;
@@ -1909,7 +1897,7 @@ function drawRadarDataPoints(series, opts, config, context) {
                 var theData = (opts.textPoint.data || []).find(function (y) {
                     return y && y.value == x;
                 });
-                if (theData) {
+                if (theData && theData.seriesIndex === points[index].seriesIndex) {
                     var point = Object.assign({}, points[index]);
                     point.text = theData.text;
                     textPoints.push(point);
@@ -2294,6 +2282,7 @@ Charts.prototype.showToolTip = function (e) {
 Charts.prototype.showIndexToolTip = function () {
     var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : -1;
     var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var seriesIndexList = arguments[2];
 
     if (this.opts.type === 'line' || this.opts.type === 'area') {
         var currentOffset = this.scrollOption.currentOffset;
@@ -2304,9 +2293,18 @@ Charts.prototype.showIndexToolTip = function () {
             isPointTip: true
         });
         if (index > -1) {
-            var seriesData = getSeriesDataItem(this.opts.series, index);
+            var series = this.opts.series || [];
+            var calPoints = this.chartData.calPoints || [];
+            if (seriesIndexList && seriesIndexList.length) {
+                series = series.filter(function (x, i) {
+                    return seriesIndexList.indexOf(i) > -1;
+                });
+                calPoints = calPoints.filter(function (x, i) {
+                    return seriesIndexList.indexOf(i) > -1;
+                });
+            }            var seriesData = getSeriesDataItem(series, index);
             if (seriesData.length !== 0) {
-                var _getToolTipData2 = getToolTipData(seriesData, this.chartData.calPoints, index, this.opts.categories, option),
+                var _getToolTipData2 = getToolTipData(seriesData, calPoints, index, this.opts.categories, option),
                     textList = _getToolTipData2.textList,
                     offset = _getToolTipData2.offset;
 
